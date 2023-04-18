@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class CompleteOrderRequest {
-    @JsonProperty("complete_info")
+    @JsonProperty(value = "complete_info",required = true)
     private List<CompleteOrderDto> completeInfo;
 }

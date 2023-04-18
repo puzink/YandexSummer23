@@ -9,9 +9,10 @@ import java.util.List;
 @Data
 public class CreateCourierDto {
 
-    @JsonProperty("courier_type")
+    @JsonProperty(value = "courier_type",required = true)
     private CourierType type;
+    @JsonProperty(required = true)
     private List<Integer> regions;
-    @JsonProperty("working_hours")
+    @JsonProperty(value = "working_hours",required = true)
     private List<String> workingHours;
 }

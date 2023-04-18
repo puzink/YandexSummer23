@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class CreateOrderRequest {
 
-    @JsonProperty("orders")
+    @JsonProperty(value = "orders",required = true)
     private List<CreateOrderDto> orders;
 
 }

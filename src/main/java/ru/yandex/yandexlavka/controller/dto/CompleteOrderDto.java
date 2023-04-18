@@ -3,18 +3,15 @@ package ru.yandex.yandexlavka.controller.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class CompleteOrderDto {
-    @JsonProperty("courier_id")
+    @JsonProperty(value = "courier_id",required = true)
     private Long courierId;
 
-    @JsonProperty("order_id")
+    @JsonProperty(value = "order_id",required = true)
     private Long orderId;
 
-    @JsonProperty("complete_time")
-    //@JsonFormat
+    @JsonProperty(value = "complete_time",required = true)
     private String completeTime;
 
 }

@@ -7,11 +7,14 @@ import java.util.List;
 
 @Data
 public class CreateOrderDto {
+    @JsonProperty(required = true)
     private Double weight;
+    @JsonProperty(required = true)
     private Integer regions;
 
-    @JsonProperty("delivery_hours")
+    @JsonProperty(value = "delivery_hours",required = true)
     private List<String> deliveryHours;
+    @JsonProperty(required = true)
     private Integer cost;
 
 }
