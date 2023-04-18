@@ -3,25 +3,26 @@ package ru.yandex.yandexlavka.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.controller.dto.CreateCourierRequest;
 import ru.yandex.yandexlavka.dto.CourierDto;
+import ru.yandex.yandexlavka.dto.OrderDto;
 
 import java.util.List;
 
 @RestController
-@ResponseBody
 @RequestMapping("couriers")
 //TODO fill
 public class CourierController {
 
     @GetMapping
-    public void getCouriers(@RequestParam(required = false) Integer limit,
-                            @RequestParam(required = false) Integer offset){
+    public List<CourierDto> getCouriers(@RequestParam(required = false,defaultValue = "1") Integer limit,
+                            @RequestParam(required = false,defaultValue = "0") Integer offset){
         System.out.println("Hi");
-
+        return null;
     }
 
     @GetMapping("{courierId}")
-    public void getCourierById(@PathVariable Long courierId){
+    public CourierDto getCourierById(@PathVariable Long courierId){
         System.out.println("Hi");
+        return null;
     }
 
     @PostMapping
@@ -29,5 +30,6 @@ public class CourierController {
         System.out.println("Hi");
         return null;
     }
+
 
 }

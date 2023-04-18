@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class CourierDto {
 
-    private Integer id;
+    private Long id;
     private CourierType type;
     private List<Integer> regions;
     private List<String> workingHours;
