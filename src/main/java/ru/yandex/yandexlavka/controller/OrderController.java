@@ -1,9 +1,11 @@
 package ru.yandex.yandexlavka.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.controller.dto.CompleteOrderRequest;
 import ru.yandex.yandexlavka.controller.dto.CreateOrderRequest;
 import ru.yandex.yandexlavka.dto.OrderDto;
+import ru.yandex.yandexlavka.service.OrderService;
 
 import java.util.List;
 
@@ -12,28 +14,35 @@ import java.util.List;
 //TODO fill
 public class OrderController {
 
+    private final OrderService orderService;
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @PostMapping
     public List<OrderDto> createOrders(@RequestBody CreateOrderRequest newOrders){
         System.out.println("Hi");
-        return null;
+        return orderService.createOrders(newOrders.getOrders());
     }
 
     @GetMapping("{orderId}")
     public OrderDto getOrderById(@PathVariable Long orderId){
 
-        return null;
+        return orderService.getOrderById(orderId);
     }
 
     @GetMapping
     public List<OrderDto> getOrders(@RequestParam(required = false,defaultValue = "0") Integer offset,
                                     @RequestParam(required = false,defaultValue = "1") Integer limit){
 
-        return null;
+        return orderService.getOrders(offset,limit);
     }
 
     @PostMapping("complete")
     public List<OrderDto> completeOrders(@RequestBody CompleteOrderRequest completedOrders){
-        return null;
+        return orderService.completeOrders(completedOrders.getCompleteInfo());
     }
 
 }
