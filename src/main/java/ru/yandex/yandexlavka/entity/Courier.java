@@ -1,7 +1,10 @@
 package ru.yandex.yandexlavka.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.yandexlavka.dto.CourierType;
 
 import java.util.List;
@@ -9,6 +12,9 @@ import java.util.List;
 @Entity
 @Table(name="courier")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Courier {
 
     @Id

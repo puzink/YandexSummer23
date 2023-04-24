@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.controller.dto.CreateCourierRequest;
 import ru.yandex.yandexlavka.dto.CourierDto;
+import ru.yandex.yandexlavka.entity.Courier;
 import ru.yandex.yandexlavka.service.CouriersServiceImpl;
 
 import java.util.List;
@@ -24,17 +25,20 @@ public class CourierController {
     @GetMapping
     public List<CourierDto> getCouriers(@RequestParam(required = false,defaultValue = "1") Integer limit,
                             @RequestParam(required = false,defaultValue = "0") Integer offset){
-        return couriersService.getCouriers(limit,offset);
+        List<Courier> couriers = couriersService.getCouriers(limit, offset);
+        return null;
     }
 
     @GetMapping("{courierId}")
     public CourierDto getCourierById(@PathVariable Long courierId){
-        return couriersService.getCourierById(courierId);
+        Courier courier = couriersService.getCourierById(courierId);
+        return null;
     }
 
     @PostMapping
     public List<CourierDto> addCouriers(@RequestBody CreateCourierRequest newCouriers){
-        return couriersService.addCouriers(newCouriers.getCouriers());
+        List<CourierDto> courierDtos = couriersService.addCouriers(newCouriers.getCouriers());
+        return null;
     }
 
 

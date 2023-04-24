@@ -2,16 +2,17 @@ package ru.yandex.yandexlavka.service;
 
 import ru.yandex.yandexlavka.controller.dto.CreateCourierDto;
 import ru.yandex.yandexlavka.dto.CourierDto;
+import ru.yandex.yandexlavka.entity.Courier;
 
 import java.util.List;
 
 public interface CourierService {
 
-    CourierDto getCourierById(Long id);
+    Courier getCourierById(Long id);
 
     List<CourierDto> addCouriers(List<CreateCourierDto> couriers);
 
-    List<CourierDto> getCouriers(Integer limit, Integer offset);
+    List<Courier> getCouriers(Integer limit, Integer offset);
 
 
 }
