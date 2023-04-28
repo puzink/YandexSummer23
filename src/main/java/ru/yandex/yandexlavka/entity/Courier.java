@@ -25,13 +25,13 @@ public class Courier {
     @Enumerated(EnumType.STRING)
     private CourierType type;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="courier_regions",
             joinColumns = @JoinColumn(name="courier_id"))
     @Column(name="region")
     private List<Integer> regions;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "courier_working_hours",
             joinColumns = @JoinColumn(name="courier_id"))
     private List<TimeInterval> workingHours;

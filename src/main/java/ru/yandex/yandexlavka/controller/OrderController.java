@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.controller.dto.CompleteOrderRequest;
 import ru.yandex.yandexlavka.controller.dto.CreateOrderRequest;
 import ru.yandex.yandexlavka.dto.OrderDto;
+import ru.yandex.yandexlavka.entity.Order;
 import ru.yandex.yandexlavka.service.OrderService;
 
 import java.util.List;
@@ -30,14 +31,16 @@ public class OrderController {
     @GetMapping("{orderId}")
     public OrderDto getOrderById(@PathVariable Long orderId){
 
-        return orderService.getOrderById(orderId);
+        Order order = orderService.getOrderById(orderId);
+        return null;
     }
 
     @GetMapping
     public List<OrderDto> getOrders(@RequestParam(required = false,defaultValue = "0") Integer offset,
                                     @RequestParam(required = false,defaultValue = "1") Integer limit){
 
-        return orderService.getOrders(offset,limit);
+        List<Order> orders = orderService.getOrders(offset, limit);
+        return null;
     }
 
     @PostMapping("complete")

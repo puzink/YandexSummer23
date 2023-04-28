@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 public class CreateOrderDto {
     @JsonProperty(required = true)
-    private Double weight;
-    @JsonProperty(required = true)
-    private Integer regions;
+    private String weight;
+    @JsonProperty(value = "regions", required = true)
+    private Integer region;
 
     @JsonProperty(value = "delivery_hours",required = true)
     private List<String> deliveryHours;
