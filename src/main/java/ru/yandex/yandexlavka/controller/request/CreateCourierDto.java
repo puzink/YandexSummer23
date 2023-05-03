@@ -1,4 +1,4 @@
-package ru.yandex.yandexlavka.controller.dto;
+package ru.yandex.yandexlavka.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

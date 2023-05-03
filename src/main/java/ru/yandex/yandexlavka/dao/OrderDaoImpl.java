@@ -3,7 +3,7 @@ package ru.yandex.yandexlavka.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.yandexlavka.controller.dto.CreateOrderDto;
+import ru.yandex.yandexlavka.controller.request.CreateOrderDto;
 import ru.yandex.yandexlavka.dto.OrderDto;
 
 import java.util.ArrayList;

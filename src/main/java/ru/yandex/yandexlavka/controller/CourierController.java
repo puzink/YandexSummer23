@@ -2,7 +2,7 @@ package ru.yandex.yandexlavka.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.yandexlavka.controller.dto.CreateCourierRequest;
+import ru.yandex.yandexlavka.controller.request.CreateCourierRequest;
 import ru.yandex.yandexlavka.dto.CourierDto;
 import ru.yandex.yandexlavka.entity.Courier;
 import ru.yandex.yandexlavka.service.CouriersServiceImpl;

@@ -1,11 +1,12 @@
 package ru.yandex.yandexlavka.service;
 
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.yandexlavka.controller.dto.CompleteOrderDto;
-import ru.yandex.yandexlavka.controller.dto.CreateOrderDto;
+import ru.yandex.yandexlavka.controller.request.CompleteOrderDto;
+import ru.yandex.yandexlavka.controller.request.CreateOrderDto;
 import ru.yandex.yandexlavka.dto.OrderDto;
 import ru.yandex.yandexlavka.entity.Order;
 import ru.yandex.yandexlavka.repository.OrderRepository;
@@ -15,9 +16,11 @@ import java.util.List;
 @Service
 //TODO fill
 @Transactional
+@NoArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
-    private final OrderRepository orderRepository;
+//    private final OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository) {

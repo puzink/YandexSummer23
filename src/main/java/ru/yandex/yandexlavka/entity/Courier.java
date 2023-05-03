@@ -34,6 +34,12 @@ public class Courier {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "courier_working_hours",
             joinColumns = @JoinColumn(name="courier_id"))
+    @AttributeOverrides({
+            @AttributeOverride(name="to",
+                    column = @Column(name="time_to")),
+            @AttributeOverride(name="from",
+                    column = @Column(name="time_from"))
+    })
     private List<TimeInterval> workingHours;
 
 }

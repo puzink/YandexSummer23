@@ -7,11 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "order", schema = "public")
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,7 +30,14 @@ public class Order {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "order_delivery_hours",
-            joinColumns = @JoinColumn(name="order_id"))
+            joinColumns = @JoinColumn(name="order_id")
+    )
+    @AttributeOverrides({
+            @AttributeOverride(name="to",
+                column = @Column(name="time_to")),
+            @AttributeOverride(name="from",
+                column = @Column(name="time_from"))
+    })
     private List<TimeInterval> deliveryHours;
 
     @Column(name="cost")
@@ -38,5 +45,6 @@ public class Order {
 
     @Column(name="completed_time")
     @Nullable
-    private Date completedTime;
+    private LocalDateTime completedTime;
+
 }

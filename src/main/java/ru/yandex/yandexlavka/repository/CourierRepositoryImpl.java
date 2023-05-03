@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.yandexlavka.controller.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.controller.request.CreateCourierDto;
 import ru.yandex.yandexlavka.dao.CouriersDao;
 import ru.yandex.yandexlavka.dto.CourierDto;
 import ru.yandex.yandexlavka.entity.Courier;

@@ -1,7 +1,7 @@
 package ru.yandex.yandexlavka.dto;
 
 import lombok.Data;
-import ru.yandex.yandexlavka.controller.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.controller.request.CreateCourierDto;
 
 import java.util.List;
 

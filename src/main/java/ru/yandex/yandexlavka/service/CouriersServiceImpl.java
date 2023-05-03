@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.yandexlavka.controller.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.controller.request.CreateCourierDto;
 import ru.yandex.yandexlavka.dto.CourierDto;
 import ru.yandex.yandexlavka.entity.Courier;
 import ru.yandex.yandexlavka.repository.CourierRepository;
@@ -38,6 +38,6 @@ public class CouriersServiceImpl implements CourierService{
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public List<Courier> getCouriers(Integer limit, Integer offset){
-        return null;
+        return courierRepository.getCouriers(offset,limit);
     }
 }

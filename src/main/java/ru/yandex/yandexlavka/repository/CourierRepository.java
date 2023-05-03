@@ -1,7 +1,7 @@
 package ru.yandex.yandexlavka.repository;
 
 import org.springframework.data.repository.Repository;
-import ru.yandex.yandexlavka.controller.dto.CreateCourierDto;
+import ru.yandex.yandexlavka.controller.request.CreateCourierDto;
 import ru.yandex.yandexlavka.dto.CourierDto;
 import ru.yandex.yandexlavka.entity.Courier;
 

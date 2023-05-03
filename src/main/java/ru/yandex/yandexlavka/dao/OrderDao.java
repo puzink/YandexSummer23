@@ -1,6 +1,6 @@
 package ru.yandex.yandexlavka.dao;
 
-import ru.yandex.yandexlavka.controller.dto.CreateOrderDto;
+import ru.yandex.yandexlavka.controller.request.CreateOrderDto;
 import ru.yandex.yandexlavka.dto.OrderDto;
 
 import java.util.List;

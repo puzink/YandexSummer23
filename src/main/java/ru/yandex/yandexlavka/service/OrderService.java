@@ -1,7 +1,7 @@
 package ru.yandex.yandexlavka.service;
 
-import ru.yandex.yandexlavka.controller.dto.CompleteOrderDto;
-import ru.yandex.yandexlavka.controller.dto.CreateOrderDto;
+import ru.yandex.yandexlavka.controller.request.CompleteOrderDto;
+import ru.yandex.yandexlavka.controller.request.CreateOrderDto;
 import ru.yandex.yandexlavka.dto.OrderDto;
 import ru.yandex.yandexlavka.entity.Order;
 
