@@ -1,0 +1,10 @@
+{
+  "order_id": 1,
+  "cost":10,
+  "delivery_hours":[
+    "10:15-12:10",
+    "00:12-21:50"
+  ],
+  "regions":5,
+  "weight":10.5
+}

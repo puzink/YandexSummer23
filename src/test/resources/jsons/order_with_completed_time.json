@@ -1,0 +1,10 @@
+{
+  "order_id": 3,
+  "cost":11,
+  "delivery_hours":[
+    "08:07-14:08"
+  ],
+  "regions":7,
+  "weight":100,
+  "completed_time": "2023-05-10T09:10:01"
+}
