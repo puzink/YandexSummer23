@@ -1,8 +1,11 @@
 package ru.yandex.yandexlavka.repository;
 
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
-import org.hibernate.query.criteria.JpaCriteriaQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -37,8 +40,13 @@ public class OrderRepositoryImpl implements OrderRepository{
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public List<Order> getOrders(int offset, int limit) {
-        JpaCriteriaQuery<Order> allOrdersCriteria =
-                session.getCriteriaBuilder().createQuery(Order.class);
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Order> allOrdersCriteria = cb.createQuery(Order.class);
+
+        Root<Order> root = allOrdersCriteria.from(Order.class);
+        Path<Long> idAttribute = root.get(root.getModel().getId(Long.class));
+
+        allOrdersCriteria.orderBy(cb.asc(idAttribute));
         return session.createQuery(allOrdersCriteria)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
