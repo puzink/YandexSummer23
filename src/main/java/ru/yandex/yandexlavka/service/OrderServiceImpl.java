@@ -12,6 +12,7 @@ import ru.yandex.yandexlavka.entity.Order;
 import ru.yandex.yandexlavka.repository.OrderRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 //TODO fill
@@ -35,8 +36,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
-    public Order getOrderById(Long orderId) {
-        return orderRepository.getOrderById(orderId);
+    public Optional<Order> getOrderById(Long orderId) {
+        return Optional.ofNullable(orderRepository.getOrderById(orderId));
     }
 
     @Override

@@ -6,12 +6,13 @@ import ru.yandex.yandexlavka.dto.OrderDto;
 import ru.yandex.yandexlavka.entity.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
 
     List<OrderDto> createOrders(List<CreateOrderDto> newOrders);
 
-    Order getOrderById(Long orderId);
+    Optional<Order> getOrderById(Long orderId);
 
     List<Order> getOrders(Integer offset, Integer limit);
 

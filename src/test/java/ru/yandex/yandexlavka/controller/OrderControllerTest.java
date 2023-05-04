@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,20 +65,20 @@ public class OrderControllerTest {
             OrderDto orderDto = loadOrder(file);
             Order order = orderConverter.toEntity(orderDto);
 
-            Mockito.when(orderService.getOrderById(order.getId())).thenReturn(order);
+            Mockito.when(orderService.getOrderById(order.getId())).thenReturn(Optional.of(order));
             MvcResult result = mockMvc.perform(get("/orders/" + order.getId()))
                     .andExpect(status().isOk())
                     .andReturn();
 
             String responseJson = result.getResponse().getContentAsString();
-            String jsonExpected = readFile(file);
+            String jsonExpected = readFileToString(file);
             JSONAssert.assertEquals(jsonExpected, responseJson, false);
         }
     }
 
     @Test
     public void notFoundOrderById() throws Exception {
-        Mockito.when(orderService.getOrderById(Mockito.any())).thenReturn(null);
+        Mockito.when(orderService.getOrderById(Mockito.any())).thenReturn(Optional.empty());
         mockMvc.perform(get("/orders/1"))
                 .andExpect(status().isNotFound());
     }
@@ -108,7 +109,7 @@ public class OrderControllerTest {
         return objectMapper.readValue(new File(file), OrderDto.class);
     }
 
-    private String readFile(URI file) throws IOException {
+    private String readFileToString(URI file) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Files.copy(Path.of(file), out);
         return out.toString(StandardCharsets.UTF_8);

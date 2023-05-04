@@ -11,6 +11,7 @@ import ru.yandex.yandexlavka.entity.converter.OrderConverter;
 import ru.yandex.yandexlavka.service.OrderService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("orders")
@@ -33,11 +34,8 @@ public class OrderController {
     @GetMapping("{orderId}")
     public OrderDto getOrderById(@PathVariable Long orderId){
 
-        Order order = orderService.getOrderById(orderId);
-        if(order == null){
-            throw new NotFoundException();
-        }
-        return new OrderConverter().toDto(order);
+        Optional<Order> order = orderService.getOrderById(orderId);
+        return new OrderConverter().toDto(order.orElseThrow(NotFoundException::new));
     }
 
     @GetMapping
