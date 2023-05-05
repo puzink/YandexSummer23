@@ -1,6 +1,8 @@
 package ru.yandex.yandexlavka.controller;
 
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.yandexlavka.controller.request.CompleteOrderRequest;
 import ru.yandex.yandexlavka.controller.request.CreateOrderRequest;
@@ -15,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("orders")
-//TODO fill
+@Validated
 public class OrderController {
 
     private final OrderService orderService;
@@ -39,11 +41,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> getOrders(@RequestParam(required = false,defaultValue = "0") Integer offset,
-                                    @RequestParam(required = false,defaultValue = "1") Integer limit){
-
+    public List<OrderDto> getOrders(@RequestParam(required = false,defaultValue = "0") @Min(0) Integer offset,
+                                    @RequestParam(required = false,defaultValue = "1") @Min(0) Integer limit){
+        OrderConverter orderConverter = new OrderConverter();
         List<Order> orders = orderService.getOrders(offset, limit);
-        return null;
+        return orders.stream()
+                .map(orderConverter::toDto)
+                .toList();
     }
 
     @PostMapping("complete")
