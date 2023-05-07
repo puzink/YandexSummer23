@@ -1,6 +1,7 @@
 package ru.yandex.yandexlavka.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public class CreateOrderRequest {
 
     @JsonProperty(value = "orders",required = true)
+    @Valid
     private List<CreateOrderDto> orders;
 
 }

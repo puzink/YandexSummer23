@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.yandex.yandexlavka.dto.OrderDto;
@@ -31,24 +32,21 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-//@WebMvcTest
 public class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    //    @Before
     @MockBean
     private OrderService orderService;
 
-    private static List<String> jsonOrders;
-
     private static URI jsonDirectory;
     private static final String JSON_DIRECTORY_NAME = "jsons";
+    private static final String ORDERS_DIRECTORY_NAME = "orders";
 
 
     @BeforeAll
@@ -56,21 +54,26 @@ public class OrderControllerTest {
         jsonDirectory = OrderControllerTest.class.getClassLoader()
                 .getResource(JSON_DIRECTORY_NAME)
                 .toURI()
-                .resolve(".")
-                .resolve(JSON_DIRECTORY_NAME + "/");
-
-        jsonOrders = List.of("order_1.json", "order_with_completed_time.json");
+                .resolve(JSON_DIRECTORY_NAME + "/")
+                .resolve(ORDERS_DIRECTORY_NAME + "/");
     }
 
 
     @Nested
     class GetOrderByIdTest {
+
+        private static List<String> jsonOrders;
+        @BeforeAll
+        public static void setUp(){
+            jsonOrders = List.of("order_1.json", "order_with_completed_time.json");
+        }
+
         @Test
         public void getOrderById() throws Exception {
             List<String> jsonValues = readJsons(jsonOrders);
             OrderConverter orderConverter = new OrderConverter();
             for (String json : jsonValues) {
-                OrderDto orderDto = loadOrder(json);
+                OrderDto orderDto = loadOrderFromString(json);
                 Order order = orderConverter.toEntity(orderDto);
 
                 Mockito.when(orderService.getOrderById(order.getId())).thenReturn(Optional.of(order));
@@ -99,6 +102,12 @@ public class OrderControllerTest {
 
     @Nested
     class GetOrdersTest{
+
+        private static List<String> jsonOrders;
+        @BeforeAll
+        public static void setUp(){
+            jsonOrders = List.of("order_1.json", "order_with_completed_time.json");
+        }
 
         @Test
         public void getOrders() throws Exception {
@@ -149,14 +158,57 @@ public class OrderControllerTest {
 
     }
 
+    @Nested
+    public class AddOrders{
 
-//    @Test
-//    public void test() throws JSONException {
-//        String expected = "[{\"id\":1},{\"id\":2}]";
-//        String actual = "[{\"id\":2},{\"id\":1}]";
-//        JSONAssert.assertEquals(expected,actual,false);
-//    }
+        public static URI addOrdersDirectory;
+        private static String newOrdersJson;
+        private static String createdOrdersJson;
 
+        @BeforeAll
+        public static void setUp(){
+            addOrdersDirectory = jsonDirectory.resolve("addOrders/");
+            newOrdersJson = "new_orders.json";
+            createdOrdersJson = "created_orders.json";
+        }
+
+        @Test
+        public void correctOrders() throws Exception {
+
+            URI requestJsonContent = addOrdersDirectory.resolve(newOrdersJson);
+            URI responseJson = addOrdersDirectory.resolve(createdOrdersJson);
+            List<OrderDto> createdOrderDtos = loadOrderArray(responseJson);
+
+            Mockito.when(orderService.createOrders(Mockito.any())).thenReturn(createdOrderDtos);
+            MvcResult result = mockMvc.perform(post("/orders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(readFileToString(requestJsonContent)))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            String actualJson = result.getResponse().getContentAsString();
+            String expectedJson = readFileToString(responseJson);
+
+            JSONAssert.assertEquals(expectedJson,actualJson,false);
+        }
+
+        @Test
+        public void badWeight() throws Exception {
+            String badWeightOrderJson = "bad_weight.json";
+            String json = readFileToString(addOrdersDirectory.resolve(badWeightOrderJson));
+            Mockito.when(orderService.createOrders(Mockito.any())).thenReturn(null);
+            mockMvc.perform(post("/orders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(json))
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    public class CompleteOrders{
+        //TODO fill
+
+    }
     private List<String> readJsons(List<String> jsonNames) throws IOException {
         List<String> res = new ArrayList<>();
         for(String json : jsonNames){
@@ -172,34 +224,20 @@ public class OrderControllerTest {
         return out.toString(StandardCharsets.UTF_8);
     }
 
-    private List<OrderDto> loadArrayOfOrders(URI file) throws IOException {
+    public List<OrderDto> loadOrderArray(URI file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return Arrays.asList(objectMapper.readValue(new File(file), OrderDto[].class));
-    }
-
-    private List<OrderDto> loadOrdersFromFiles(List<String> files) throws IOException {
-        List<OrderDto> res = new ArrayList<>();
-        for (String json : files) {
-            URI file = jsonDirectory.resolve(json);
-            res.add(loadOrder(file));
-        }
-        return res;
-    }
-
-    private OrderDto loadOrder(URI file) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(new File(file), OrderDto.class);
     }
 
     private List<OrderDto> loadOrders(List<String> values) throws IOException {
         List<OrderDto> res = new ArrayList<>();
         for(String v : values){
-            res.add(loadOrder(v));
+            res.add(loadOrderFromString(v));
         }
         return res;
     }
 
-    private OrderDto loadOrder(String value) throws IOException {
+    private OrderDto loadOrderFromString(String value) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(value, OrderDto.class);
     }

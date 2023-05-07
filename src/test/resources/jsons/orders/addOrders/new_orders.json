@@ -1,0 +1,20 @@
+{
+  "orders":[
+    {
+      "cost":100,
+      "delivery_hours":[
+        "12:00-13:10"
+      ],
+      "regions":10,
+      "weight":120.1
+    },{
+      "cost":10,
+      "delivery_hours":[
+        "13:00-20:31",
+        "01:50-18:07"
+      ],
+      "regions":2,
+      "weight":15.5
+    }
+  ]
+}

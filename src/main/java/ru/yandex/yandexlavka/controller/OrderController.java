@@ -1,5 +1,6 @@
 package ru.yandex.yandexlavka.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +29,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public List<OrderDto> createOrders(@RequestBody CreateOrderRequest newOrders){
-        System.out.println("Hi");
+    public List<OrderDto> createOrders(@Valid @RequestBody CreateOrderRequest newOrders){
         return orderService.createOrders(newOrders.getOrders());
     }
 

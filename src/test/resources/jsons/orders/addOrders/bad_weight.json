@@ -1,0 +1,12 @@
+{
+  "orders": [
+    {
+      "cost": 5,
+      "delivery_hours": [
+        "12:00-13:10"
+      ],
+      "regions": 10,
+      "weight": "abc"
+    }
+  ]
+}
