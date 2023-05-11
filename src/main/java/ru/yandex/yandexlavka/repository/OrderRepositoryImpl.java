@@ -6,6 +6,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -15,6 +17,7 @@ import ru.yandex.yandexlavka.dao.OrderDaoImpl;
 import ru.yandex.yandexlavka.dto.OrderDto;
 import ru.yandex.yandexlavka.entity.Order;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -23,6 +26,7 @@ public class OrderRepositoryImpl implements OrderRepository{
 
     @PersistenceContext
     private Session session;
+
     private final OrderDaoImpl orderDao;
 
     @Autowired
@@ -54,8 +58,20 @@ public class OrderRepositoryImpl implements OrderRepository{
     }
 
     @Override
+    public List<Order> getOrdersByIdInOrderById(Collection<Long> ids) {
+        HibernateCriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        JpaCriteriaQuery<Order> query = criteriaBuilder.createQuery(Order.class);
+        Root<Order> root = query.from(Order.class);
+        Path<Long> idAttribute = root.get(root.getModel().getId(Long.class));
+        query.where(idAttribute.in(ids));
+        return session.createQuery(query)
+                .getResultList();
+    }
+
+    @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<OrderDto> createOrders(List<CreateOrderDto> newOrders) {
         return orderDao.createOrders(newOrders);
     }
+
 }

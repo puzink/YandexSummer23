@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import ru.yandex.yandexlavka.dto.CourierType;
 
 import java.util.List;
@@ -41,5 +42,9 @@ public class Courier {
                     column = @Column(name="time_from"))
     })
     private List<TimeInterval> workingHours;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "courier")
+    @BatchSize(size = 30)
+    private List<Order> completedOrders;
 
 }

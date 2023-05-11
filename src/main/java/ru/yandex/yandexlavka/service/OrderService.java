@@ -16,5 +16,5 @@ public interface OrderService {
 
     List<Order> getOrders(Integer offset, Integer limit);
 
-    List<OrderDto> completeOrders(List<CompleteOrderDto> completedOrders);
+    List<Order> completeOrders(List<CompleteOrderDto> completedOrders);
 }

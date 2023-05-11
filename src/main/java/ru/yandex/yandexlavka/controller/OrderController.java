@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.yandexlavka.controller.error.NotFoundException;
 import ru.yandex.yandexlavka.controller.request.CompleteOrderRequest;
 import ru.yandex.yandexlavka.controller.request.CreateOrderRequest;
-import ru.yandex.yandexlavka.controller.error.NotFoundException;
 import ru.yandex.yandexlavka.dto.OrderDto;
 import ru.yandex.yandexlavka.entity.Order;
 import ru.yandex.yandexlavka.entity.converter.OrderConverter;
@@ -52,7 +52,11 @@ public class OrderController {
 
     @PostMapping("complete")
     public List<OrderDto> completeOrders(@RequestBody CompleteOrderRequest completedOrders){
-        return orderService.completeOrders(completedOrders.getCompleteInfo());
+        OrderConverter orderConverter = new OrderConverter();
+        List<Order> orders = orderService.completeOrders(completedOrders.getCompleteInfo());
+        return orders.stream()
+                .map(orderConverter::toDto)
+                .toList();
     }
 
 }

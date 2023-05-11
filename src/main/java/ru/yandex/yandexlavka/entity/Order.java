@@ -1,14 +1,15 @@
 package ru.yandex.yandexlavka.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "order", schema = "public")
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldNameConstants
 public class Order {
 
     @Id
@@ -43,8 +45,14 @@ public class Order {
     @Column(name="cost")
     private Integer cost;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name="courier_id")
+    private Courier courier;
+
     @Column(name="completed_time")
-    @Nullable
     private LocalDateTime completedTime;
 
+    public boolean isCompleted(){
+        return !(Objects.isNull(completedTime) && Objects.isNull(courier));
+    }
 }
