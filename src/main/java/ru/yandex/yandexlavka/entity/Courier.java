@@ -44,7 +44,7 @@ public class Courier {
     private List<TimeInterval> workingHours;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "courier")
-    @BatchSize(size = 30)
+    @BatchSize(size = 50)
     private List<Order> completedOrders;
 
 }

@@ -7,10 +7,11 @@ import ru.yandex.yandexlavka.entity.Courier;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface CourierRepository extends Repository<Courier, Long> {
 
-    Courier getCourierById(Long id);
+    Optional<Courier> getCourierById(Long id);
     List<Courier> getCouriers(int offset, int limit);
     List<Courier> getCouriersByIdInOrderById(Collection<Long> ids);
     List<CourierDto> addCouriers(List<CreateCourierDto> newCouriers);

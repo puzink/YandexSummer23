@@ -18,6 +18,7 @@ import ru.yandex.yandexlavka.entity.Courier;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -35,8 +36,8 @@ public class CourierRepositoryImpl implements CourierRepository{
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
-    public Courier getCourierById(Long id) {
-        return session.get(Courier.class, id);
+    public Optional<Courier> getCourierById(Long id) {
+        return Optional.ofNullable(session.get(Courier.class, id));
     }
 
     @Override

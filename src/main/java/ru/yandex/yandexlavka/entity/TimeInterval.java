@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 public class TimeInterval {
 
     private LocalTime from;
-
     private LocalTime to;
 
     public TimeInterval(LocalTime from, LocalTime to) {
