@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yandex.yandexlavka.controller.error.NotFoundException;
+import ru.yandex.yandexlavka.controller.error.TooManyRequestsException;
 import ru.yandex.yandexlavka.controller.response.ExceptionResponse;
 
 @ControllerAdvice
@@ -15,6 +16,11 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> notFound(NotFoundException e) throws JsonProcessingException {
         return addResponseBody(ResponseEntity.status(HttpStatus.NOT_FOUND), e);
+    }
+
+    @ExceptionHandler(TooManyRequestsException.class)
+    public ResponseEntity<String> tooManyRequests(TooManyRequestsException e) throws JsonProcessingException {
+        return addResponseBody(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS), e);
     }
 
     @ExceptionHandler({Throwable.class})
