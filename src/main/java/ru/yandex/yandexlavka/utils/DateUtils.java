@@ -21,4 +21,11 @@ public class DateUtils {
         LocalTime to = LocalTime.parse(m.group(3), dtf);
         return new TimeInterval(from, to);
     }
+
+    public static String format(TimeInterval timeInterval){
+       return String.format("%s-%s",
+               dtf.format(timeInterval.getFrom()),
+               dtf.format(timeInterval.getTo())
+       );
+    }
 }

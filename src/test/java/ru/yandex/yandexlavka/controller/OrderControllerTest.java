@@ -2,6 +2,7 @@ package ru.yandex.yandexlavka.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +42,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private RateLimiterInterceptor rateLimiterInterceptor;
+
     @MockBean
     private OrderService orderService;
 
@@ -58,6 +67,12 @@ public class OrderControllerTest {
                 .resolve(ORDERS_DIRECTORY_NAME + "/");
     }
 
+    @BeforeEach
+    public void disableRateLimiter() throws Exception {
+        Mockito.when(rateLimiterInterceptor.preHandle(any(),any(),any()))
+                .thenReturn(true);
+    }
+
 
     @Nested
     class GetOrderByIdTest {
@@ -73,7 +88,7 @@ public class OrderControllerTest {
             List<String> jsonValues = readJsons(jsonOrders);
             OrderConverter orderConverter = new OrderConverter();
             for (String json : jsonValues) {
-                OrderDto orderDto = loadOrderFromString(json);
+                OrderDto orderDto = objectMapper.readValue(json,OrderDto.class);
                 Order order = orderConverter.toEntity(orderDto);
 
                 Mockito.when(orderService.getOrderById(order.getId())).thenReturn(Optional.of(order));
@@ -88,7 +103,7 @@ public class OrderControllerTest {
 
         @Test
         public void notFoundOrderById() throws Exception {
-            Mockito.when(orderService.getOrderById(Mockito.any())).thenReturn(Optional.empty());
+            Mockito.when(orderService.getOrderById(any())).thenReturn(Optional.empty());
             mockMvc.perform(get("/orders/1"))
                     .andExpect(status().isNotFound());
         }
@@ -117,7 +132,7 @@ public class OrderControllerTest {
             List<Order> orders = loadOrders(jsonValues).stream()
                     .map(orderConverter::toEntity)
                     .toList();
-            Mockito.when(orderService.getOrders(Mockito.any(),Mockito.any())).thenReturn(orders);
+            Mockito.when(orderService.getOrders(any(), any())).thenReturn(orders);
             MvcResult result = mockMvc.perform(get("/orders")
                             .param("offset","0")
                             .param("limit","3"))
@@ -132,7 +147,7 @@ public class OrderControllerTest {
 
         @Test
         public void emptyList() throws Exception {
-            Mockito.when(orderService.getOrders(Mockito.any(),Mockito.any())).thenReturn(List.of());
+            Mockito.when(orderService.getOrders(any(), any())).thenReturn(List.of());
             MvcResult result = mockMvc.perform(get("/orders"))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -144,7 +159,7 @@ public class OrderControllerTest {
 
         @Test
         public void badParamValue() throws Exception {
-            Mockito.when(orderService.getOrders(Mockito.any(),Mockito.any())).thenReturn(List.of());
+            Mockito.when(orderService.getOrders(any(), any())).thenReturn(List.of());
             mockMvc.perform(get("/orders")
                             .param("limit", "-1")
                             .param("offset","0"))
@@ -179,7 +194,7 @@ public class OrderControllerTest {
             URI responseJson = addOrdersDirectory.resolve(createdOrdersJson);
             List<OrderDto> createdOrderDtos = loadOrderArray(responseJson);
 
-            Mockito.when(orderService.createOrders(Mockito.any())).thenReturn(createdOrderDtos);
+            Mockito.when(orderService.createOrders(any())).thenReturn(createdOrderDtos);
             MvcResult result = mockMvc.perform(post("/orders")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(readFileToString(requestJsonContent)))
@@ -196,7 +211,7 @@ public class OrderControllerTest {
         public void badWeight() throws Exception {
             String badWeightOrderJson = "bad_weight.json";
             String json = readFileToString(addOrdersDirectory.resolve(badWeightOrderJson));
-            Mockito.when(orderService.createOrders(Mockito.any())).thenReturn(null);
+            Mockito.when(orderService.createOrders(any())).thenReturn(null);
             mockMvc.perform(post("/orders")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(json))
@@ -232,16 +247,10 @@ public class OrderControllerTest {
     private List<OrderDto> loadOrders(List<String> values) throws IOException {
         List<OrderDto> res = new ArrayList<>();
         for(String v : values){
-            res.add(loadOrderFromString(v));
+            res.add(objectMapper.readValue(v, OrderDto.class));
         }
         return res;
     }
-
-    private OrderDto loadOrderFromString(String value) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(value, OrderDto.class);
-    }
-
 
 }
 

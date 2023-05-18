@@ -19,7 +19,7 @@ public class TimeInterval {
         this.from = from;
         this.to = to;
     }
-
+    
     public String toString(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         return String.format("%s-%s", from.format(dtf), to.format(dtf));

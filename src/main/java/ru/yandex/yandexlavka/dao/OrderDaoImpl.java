@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.yandexlavka.controller.request.CreateOrderDto;
 import ru.yandex.yandexlavka.dto.OrderDto;
+import ru.yandex.yandexlavka.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +44,10 @@ public class OrderDaoImpl implements OrderDao{
                 statementParams.add(order.getCost());
                 statementParams.add(order.getRegion());
                 statementParams.add(order.getWeight());
-                statementParams.add(order.getDeliveryHours().toArray(new String[0]));
+                statementParams.add(order.getDeliveryHours().stream()
+                        .map(DateUtils::format)
+                        .toList()
+                        .toArray(new String[0]));
             });
 
             List<Long> ids = jdbcTemplate.queryForList(createOrdersStatement(ordersToInsert.size()),
