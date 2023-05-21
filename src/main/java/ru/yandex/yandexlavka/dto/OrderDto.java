@@ -27,10 +27,12 @@ public class OrderDto {
     @JsonProperty("order_id")
     @Min(1)
     private Long id;
+
     @JsonProperty(value = "weight",required = true)
     @JsonSerialize(using = StringNumberSerializer.class)
     @IsReal
     private String weight;
+
     @JsonProperty(value = "regions",required = true)
     private Integer region;
 

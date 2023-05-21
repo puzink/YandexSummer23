@@ -129,7 +129,7 @@ public class OrderControllerTest {
             List<String> jsonValues = readJsons(jsonOrders);
             OrderConverter orderConverter = new OrderConverter();
 
-            List<Order> orders = loadOrders(jsonValues).stream()
+            List<Order> orders = convertStringOrders(jsonValues).stream()
                     .map(orderConverter::toEntity)
                     .toList();
             Mockito.when(orderService.getOrders(any(), any())).thenReturn(orders);
@@ -221,7 +221,53 @@ public class OrderControllerTest {
 
     @Nested
     public class CompleteOrders{
-        //TODO fill
+        private static URI completeOrdersDirectory;
+        private static URI requestJson;
+        private static URI responseJson;
+
+
+        @BeforeAll
+        public static void setUp(){
+            completeOrdersDirectory = jsonDirectory.resolve("completeOrders/");
+            requestJson = completeOrdersDirectory.resolve("request.json");
+            responseJson = completeOrdersDirectory.resolve("response.json");
+        }
+
+        @Test
+        public void completeOrders() throws Exception {
+            String requestContent = readFileToString(requestJson);
+            List<OrderDto> completedOrders = loadOrderArray(responseJson);
+
+            OrderConverter orderConverter = new OrderConverter();
+            Mockito.when(orderService.completeOrders(any()))
+                    .thenReturn(completedOrders.stream()
+                            .map(orderConverter::toEntity)
+                            .toList());
+
+            MvcResult result = mockMvc.perform(post("/orders/complete")
+                            .content(requestContent)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            String actualResponse = result.getResponse().getContentAsString();
+            String expected = readFileToString(responseJson);
+
+            JSONAssert.assertEquals(expected, actualResponse, false);
+        }
+
+        @Test
+        public void exceptionOccurs() throws Exception {
+            String requestContent = readFileToString(requestJson);
+
+            Mockito.when(orderService.completeOrders(any()))
+                    .thenThrow(IllegalArgumentException.class);
+
+            mockMvc.perform(post("/orders/complete")
+                        .content(requestContent)
+                        .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest());
+        }
 
     }
     private List<String> readJsons(List<String> jsonNames) throws IOException {
@@ -240,11 +286,10 @@ public class OrderControllerTest {
     }
 
     public List<OrderDto> loadOrderArray(URI file) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         return Arrays.asList(objectMapper.readValue(new File(file), OrderDto[].class));
     }
 
-    private List<OrderDto> loadOrders(List<String> values) throws IOException {
+    private List<OrderDto> convertStringOrders(List<String> values) throws IOException {
         List<OrderDto> res = new ArrayList<>();
         for(String v : values){
             res.add(objectMapper.readValue(v, OrderDto.class));
